@@ -1,0 +1,7 @@
+package com.lyamtalbot.backlogbuster2.backlogbuster2.database
+
+import org.koin.core.module.Module
+import org.koin.dsl.module
+
+actual val dataStoreModule: Module
+    get() = module { single {createDataStore()}}

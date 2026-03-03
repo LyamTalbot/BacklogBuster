@@ -17,7 +17,7 @@ class AddScreenModel(private val gameDao: GameDao) : ScreenModel {
 
     fun addGame(game: Game) {
         screenModelScope.launch {
-            gameDao.insert(game)
+            gameDao.upsert(game)
         }
     }
 }

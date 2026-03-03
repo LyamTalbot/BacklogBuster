@@ -8,10 +8,12 @@ import com.lyamtalbot.backlogbuster2.backlogbuster2.database.GameDao
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 
 class DetailsViewModel(private val gameDao: GameDao, private val savedStateHandle: SavedStateHandle) : ViewModel() {
-    val gameId: Int = savedStateHandle["gameId"]!!
+    val gameId: Int = savedStateHandle["gameId"]?: -1
     val game: StateFlow<Game?> = gameDao.gameByIdFlow(gameId)
         .stateIn(
             viewModelScope,

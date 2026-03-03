@@ -60,7 +60,8 @@ kotlin {
             implementation("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion")
             implementation("cafe.adriel.voyager:voyager-transitions:$voyagerVersion")
             implementation("cafe.adriel.voyager:voyager-koin:$voyagerVersion")
-
+            implementation("androidx.datastore:datastore:1.2.0")
+            implementation("androidx.datastore:datastore-preferences:1.2.0")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

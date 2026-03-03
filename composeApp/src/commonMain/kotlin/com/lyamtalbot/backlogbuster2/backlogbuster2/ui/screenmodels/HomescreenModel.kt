@@ -1,20 +1,25 @@
 package com.lyamtalbot.backlogbuster2.backlogbuster2.ui.screenmodels
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.lyamtalbot.backlogbuster2.backlogbuster2.database.Game
 import com.lyamtalbot.backlogbuster2.backlogbuster2.database.GameDao
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.Filters
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.SortType
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.UiState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
 
-class HomescreenModel(private val gameDao: GameDao) : ScreenModel {
+class HomescreenModel(private val gameDao: GameDao, private val dataStore: DataStore<Preferences>) : ScreenModel {
 
     private val _gameName = MutableStateFlow(TextFieldValue(""))
 
@@ -24,34 +29,62 @@ class HomescreenModel(private val gameDao: GameDao) : ScreenModel {
 
     private val _reverseList = MutableStateFlow(false)
 
-    //@TODO: Define the colours
-    //Or do I want to just do this as an array?
-    //Very bad
-    //Bad
-    //Below average
-    //Above average
-    //Good
-    //Great
-    private val _colourArray = arrayOf(
-        Color(255, 0,0,229),
-        Color(255,90,0,229),
-        Color(255,170,0,229),
-        Color(255,230,0,229),
-        Color(180,255,0,229),
-        Color(0,255,0,255,))
+    private val _showCompleted = MutableStateFlow(false)
+
+    private val filtersKey = stringSetPreferencesKey("filters")
+    private val sortKey = stringPreferencesKey("sort")
+    private val reverseListKey = booleanPreferencesKey("reverseList")
+    private val showCompletedKey = booleanPreferencesKey("showCompleted")
+
+
+
+    init {
+        screenModelScope.launch(Dispatchers.IO){
+            dataStore.data.collect { storeData ->
+                _filters.update {
+                    storeData.get(filtersKey).orEmpty().map{it -> Filters.valueOf(it)}.toSet()
+                }
+                _sort.update {
+                    SortType.valueOf(storeData.get(sortKey)?: SortType.DateAdded.name)
+                }
+                _reverseList.update{
+                    storeData[reverseListKey] ?: false
+                }
+                _showCompleted.update {
+                    storeData[showCompletedKey] ?: false
+                }
+            }
+        }
+    }
+
+    fun saveToDateStore(){
+        screenModelScope.launch(Dispatchers.IO){
+            dataStore.updateData {
+                it.toMutablePreferences().apply{
+                    set(filtersKey, _filters.value.map { it -> it.name }.toSet())
+                    set(sortKey, _sort.value.name)
+                    set(reverseListKey, _reverseList.value)
+                    set(showCompletedKey, _showCompleted.value)
+                }
+            }
+        }
+    }
 
     val uiState: StateFlow<UiState> = combine(
         gameDao.getAllGamesAsFlow(),
         _filters,
         _sort,
-        _reverseList
+        _reverseList,
+        _showCompleted,
 
-    ) { games, filters, sort, reverse ->
+    ) { games, filters, sort, reverse, showCompleted ->
+        saveToDateStore()
         UiState(
-            games = sortGames(games.filter { game -> isGameVisible(game, filters) }, sort),
+            games = if (!reverse) sortGames(games.filter { game -> isGameVisible(game, filters, showCompleted) }, sort) else sortGames(games.filter { game -> isGameVisible(game, filters, showCompleted) }, sort).reversed(),
             sortBy = sort,
             filters = filters,
-            reverseList = reverse
+            reverseList = reverse,
+            showCompleted = showCompleted
         )
     }.stateIn(
         scope = screenModelScope,
@@ -72,18 +105,30 @@ class HomescreenModel(private val gameDao: GameDao) : ScreenModel {
         _sort.value = sortType
     }
 
+    fun toggleShowCompleted() {
+        _showCompleted.value = !_showCompleted.value
+    }
+
     fun toggleReverse() {
         _reverseList.value = !_reverseList.value
     }
-    fun toggleCompleted(game: Game) {
+    fun toggleCompleted(game: Game,) {
         screenModelScope.launch {
             gameDao.update(game.copy(completed = !game.completed))
         }
     }
 
-    fun deleteGames() {
+    fun toggleCompletedID(id: Int){
         screenModelScope.launch {
-            gameDao.deleteGames()
+            val game = gameDao.getGameById(id) ?: return@launch
+            val finishedAt = game.dateCompleted ?: Clock.System.now()
+            gameDao.updateCompleted(id, !game.completed, finishedAt)
+        }
+    }
+
+    fun deleteGames(gameIDs: Set<Int>) {
+        screenModelScope.launch {
+            gameDao.deleteGames(gameIDs)
         }
     }
 
@@ -99,25 +144,25 @@ class HomescreenModel(private val gameDao: GameDao) : ScreenModel {
         }
     }
 
-    fun isGameVisible(game: Game, filters: Set<Filters>): Boolean {
-        var visible = true
+    fun isGameVisible(game: Game, filters: Set<Filters>, showCompleted: Boolean): Boolean {
         if (filters.contains(Filters.Favourite) && !game.favourite) {
-            visible = false
+            return false
+
         }
         if (filters.contains(Filters.Playing) && !game.playingNow) {
-            visible = false
+            return false
         }
-        if (filters.contains(Filters.Completed) && game.completed) {
-            visible = false
+        if (!showCompleted && game.completed) {
+            return false
         }
-        return visible
+        return true
     }
 
     fun sortGames(games: List<Game>, sortType: SortType): List<Game>{
         return when (sortType) {
             SortType.Title -> games.sortedBy { it.title }
-            SortType.DateCompleted -> games.sortedByDescending { it.dateCompleted }
-            SortType.DateAdded -> games.sortedByDescending { it.dateCreated }
+            SortType.DateCompleted -> games.sortedBy { it.dateCompleted }
+            SortType.DateAdded -> games.sortedBy { it.dateCreated }
             SortType.Rating -> games.sortedByDescending { it.rating }
             SortType.TimeToFinish -> games.sortedByDescending { it.timeToBeat }
         }

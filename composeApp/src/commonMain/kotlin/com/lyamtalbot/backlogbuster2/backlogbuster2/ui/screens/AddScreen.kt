@@ -1,64 +1,77 @@
 package com.lyamtalbot.backlogbuster2.backlogbuster2.ui.screens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.lyamtalbot.backlogbuster2.backlogbuster2.database.Game
+import com.lyamtalbot.backlogbuster2.backlogbuster2.database.ratingsMap
+import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.components.NavbarBackButton
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.getScreenModel
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.screenmodels.AddScreenModel
 
-class AddScreen() : Screen {
+@OptIn(ExperimentalMaterial3Api::class)
+data class AddScreen(val game: Game = Game()) : Screen {
 
     @Composable
     override fun Content() {
 
-        val gameName = remember { mutableStateOf(TextFieldValue("")) }
-        val platform = remember { mutableStateOf(TextFieldValue("")) }
-        val genre = remember { mutableStateOf(TextFieldValue("")) }
-        val rating = remember { mutableStateOf(TextFieldValue("")) }
-        val currentlyPlaying = remember { mutableStateOf(false) }
+        val gameName = remember { mutableStateOf(TextFieldValue(game.title)) }
+        val platform = remember { mutableStateOf(TextFieldValue(game.platform)) }
+        val genre = remember { mutableStateOf(TextFieldValue(game.genre)) }
+        val currentlyPlaying = remember { mutableStateOf(game.playingNow) }
+        val rating = remember {mutableStateOf(game.rating)}
+        val ratingDropDownText = remember {mutableStateOf(TextFieldValue(game.getRatingTextField()))}
+        val finished = remember { mutableStateOf(game.completed) }
+        val favourite = remember { mutableStateOf(game.favourite) }
+        val timeToBeat = remember {mutableStateOf(TextFieldValue(game.getTimeToBeatString()))}
+
         val buttonActive = remember { mutableStateOf(false) }
+        val ratingDropdown = remember {mutableStateOf(false)}
 
         val addScreenModel = getScreenModel<AddScreenModel>()
 
         val navigator = LocalNavigator.currentOrThrow
 
         Scaffold(
+            modifier = Modifier.fillMaxSize(),
             contentColor = MaterialTheme.colorScheme.primaryContainer,
-        ) {
+        ) { scaffoldPadding ->
+            val localFocusManager = LocalFocusManager.current
+            val keyboardController = LocalSoftwareKeyboardController.current
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(20.dp),
+                verticalArrangement = Arrangement.spacedBy(15.dp),
                 modifier = Modifier
                     .safeContentPadding()
-                    .padding(10.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .pointerInput(Unit){
+                        detectTapGestures(
+                            onTap = {
+                                keyboardController?.hide()
+                                localFocusManager.clearFocus()
+                            }
+                        )
+                    },
             ) {
+                NavbarBackButton(navigator)
                 Text(
                     text = "Another one goes on the pile, eh?",
                     style = MaterialTheme.typography.titleLarge,
@@ -100,36 +113,96 @@ class AddScreen() : Screen {
                 )
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
-                    value = rating.value,
-                    onValueChange = { rating.value = it },
-                    supportingText = {
-                        if (!rating.value.text.isBlank()) {
-                            val ratingValue = rating.value.text.toIntOrNull()
-                            if (ratingValue == null || ratingValue !in 1..6) {
-                                Text(
-                                    text = "Please enter a number between 1 and 6"
-                                )
-                            }
-                        }
-                    },
-                    label = { Text("Enter rating") }
+                    value = timeToBeat.value,
+                    onValueChange = { timeToBeat.value = it },
+                    label = { Text("Time to beat")}
                 )
+                ExposedDropdownMenuBox(
+                    expanded = ratingDropdown.value,
+                    onExpandedChange = { ratingDropdown.value = it},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ){
+                    TextField(
+                        value = ratingDropDownText.value,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = ratingDropdown.value)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor(MenuAnchorType.PrimaryNotEditable, true),
+                    )
+                    ExposedDropdownMenu(
+                        expanded = ratingDropdown.value,
+                        onDismissRequest = {ratingDropdown.value = false}
+                    ){
+                        ratingsMap.map { (intRating, stringRating) ->
+                            DropdownMenuItem(
+                                text = {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(15.dp, Alignment.Start),
+                                    ){
+                                        Text("$stringRating: $intRating")
+                                    }
+                                },
+                                onClick = {
+                                    rating.value = intRating
+                                    ratingDropDownText.value = TextFieldValue("$stringRating: $intRating")
+                                    ratingDropdown.value = false
+                                }
+                            )
+                        }
+                    }
+                }
                 //This row contains the checkbox for currently playing
                 //I kinda hate it and can't make it look the way I want
                 //Maybe a toggleable button instead
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.Start),
                     verticalAlignment = Alignment.CenterVertically,
                 )
                 {
                     Checkbox(
                         checked = currentlyPlaying.value,
-                        onCheckedChange = { currentlyPlaying.value = !currentlyPlaying.value },
+                        onCheckedChange = { currentlyPlaying.value =  it},
                     )
                     Text(
                         text = "Playing now",
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                ){
+                    Checkbox(
+                        checked = finished.value,
+                        onCheckedChange = { finished.value = it},
+                    )
+                    Text(
+                        text = "Finished",
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                ){
+                    Checkbox(
+                        checked = favourite.value,
+                        onCheckedChange = { favourite.value = it },
+                    )
+                    Text(
+                        text = "Favourite",
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 }
@@ -138,19 +211,32 @@ class AddScreen() : Screen {
                     onClick = {
                         val game =
                             Game(
-                                title = gameName.value.text,
+                                id = game.id,
+                                title = gameName.value.text.trim(),
                                 platform = platform.value.text,
                                 genre = genre.value.text,
-                                rating = rating.value.text.toIntOrNull()?: -1,
-                                playingNow = currentlyPlaying.value
+                                rating = rating.value,
+                                //Don't love this but i'll try to convert the string to an int
+                                //if it can't be converted, say because the string is '--'
+                                //it will return null and I can convert that to -1.
+                                //I'll Probably will refactor the ratings away from raw ints to an enum class
+                                //This will presumably require some kind of type converter from
+                                //the room db to the enum class inside the game object
+                                //so it'll take me an hour
+                                timeToBeat = timeToBeat.value.text.toIntOrNull()?: -1,
+                                dateCreated = game.dateCreated,
+                                playingNow = currentlyPlaying.value,
+                                completed = finished.value,
+                                favourite = favourite.value,
+                                dateCompleted = game.dateCompleted,
                                 )
                         //Add the game to the list
+                        navigator.pop()
                         addScreenModel.addGame(game)
                         //Pop this screen off the stack and navigate back to the last screen
-                        navigator.pop()
                     },
                 ) {
-                    Text("Add Game")
+                    Text(if(game.id == 0)"Add Game" else "Save Game")
                 }
             }
         }

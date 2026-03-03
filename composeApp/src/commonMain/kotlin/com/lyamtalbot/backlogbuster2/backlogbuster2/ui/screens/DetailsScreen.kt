@@ -1,5 +1,6 @@
 package com.lyamtalbot.backlogbuster2.backlogbuster2.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,7 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,8 +27,13 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.lyamtalbot.backlogbuster2.backlogbuster2.database.Game
+import com.lyamtalbot.backlogbuster2.backlogbuster2.database.ratingsMap
+import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.components.GameDetails
+import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.components.NavbarBackButton
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.getScreenModel
+import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.screenmodels.AddScreenModel
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.screenmodels.DetailsScreenModel
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
@@ -37,8 +47,7 @@ data class DetailsScreen(val gameID: Int) : Screen {
     @Composable
     override fun Content() {
         val detailsScreenModel = getScreenModel<DetailsScreenModel>()
-        val game = detailsScreenModel.getGame(gameID).collectAsState(initial = Game())
-        val padWitdh = 15
+        val game = detailsScreenModel.getGame(gameID).filterNotNull().collectAsState(initial = Game())
         val navigator = LocalNavigator.currentOrThrow
 
         Scaffold(
@@ -48,52 +57,22 @@ data class DetailsScreen(val gameID: Int) : Screen {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(space = 10.dp),
                 modifier = Modifier
-                    .padding(scaffoldPadding)
-                    .padding(start = 40.dp, end = 40.dp, bottom = 10.dp, top = 10.dp)
+                    .safeContentPadding()
                     .fillMaxWidth(),
             ) {
+                NavbarBackButton(navigator)
                 Spacer(modifier = Modifier.height(32.dp))
-                Text(
-                    text = game.value.title.padEnd(padWitdh),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    fontSize = 30.sp,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Text(
-                    text = "Genre: ${game.value.getGenreString()}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Text(
-                    text = "Platform: ${game.value.getPlatformString()}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Text(
-                    text = "Rating: ${game.value.getRatingString()}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.fillMaxWidth()
-
-                )
-                Text(
-                    text = "Date added: ${game.value.getCreatedTimeString()}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.fillMaxWidth()
-
-                )
-                Text(
-                    text = "Date finished: ${game.value.getFinishTimeString()}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                GameDetails(game.value)
+                Spacer(Modifier.height(32.dp))
+                Button(
+                    onClick = {
+                        navigator.push(AddScreen(game.value))
+                    }
+                ){
+                    Text("Edit Game")
+                }
                 Button(onClick = {
-                    (detailsScreenModel::deleteGame)(game.value.id)
+                    detailsScreenModel.deleteGame(game.value.id)
                     navigator.pop()
                 }){
                     Text("Delete game")
