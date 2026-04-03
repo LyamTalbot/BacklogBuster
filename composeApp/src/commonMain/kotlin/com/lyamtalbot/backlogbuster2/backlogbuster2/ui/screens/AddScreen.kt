@@ -17,6 +17,17 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import backlogbuster2.composeapp.generated.resources.Add_screen_header
+import backlogbuster2.composeapp.generated.resources.Res
+import backlogbuster2.composeapp.generated.resources.add_game_button
+import backlogbuster2.composeapp.generated.resources.choose_rating
+import backlogbuster2.composeapp.generated.resources.favourite_checkbox
+import backlogbuster2.composeapp.generated.resources.finished_checkbox
+import backlogbuster2.composeapp.generated.resources.genre_field
+import backlogbuster2.composeapp.generated.resources.platform_field
+import backlogbuster2.composeapp.generated.resources.play_checkbox
+import backlogbuster2.composeapp.generated.resources.title_field
+import backlogbuster2.composeapp.generated.resources.title_field_error
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -25,6 +36,7 @@ import com.lyamtalbot.backlogbuster2.backlogbuster2.database.ratingsMap
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.components.NavbarBackButton
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.getScreenModel
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.screenmodels.AddScreenModel
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 data class AddScreen(val game: Game = Game()) : Screen {
@@ -37,7 +49,8 @@ data class AddScreen(val game: Game = Game()) : Screen {
         val genre = remember { mutableStateOf(TextFieldValue(game.genre)) }
         val currentlyPlaying = remember { mutableStateOf(game.playingNow) }
         val rating = remember {mutableStateOf(game.rating)}
-        val ratingDropDownText = remember {mutableStateOf(TextFieldValue(game.getRatingTextField()))}
+        val gameRatingText = game.getRatingTextField()
+        val ratingDropDownText = remember {mutableStateOf(TextFieldValue(gameRatingText))}
         val finished = remember { mutableStateOf(game.completed) }
         val favourite = remember { mutableStateOf(game.favourite) }
         val timeToBeat = remember {mutableStateOf(TextFieldValue(game.getTimeToBeatString()))}
@@ -73,7 +86,7 @@ data class AddScreen(val game: Game = Game()) : Screen {
             ) {
                 NavbarBackButton(navigator)
                 Text(
-                    text = "Another one goes on the pile, eh?",
+                    text =  stringResource(Res.string.Add_screen_header),
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
@@ -83,11 +96,11 @@ data class AddScreen(val game: Game = Game()) : Screen {
                     onValueChange = {
                         gameName.value = it
                     },
-                    label = { Text("Enter title") },
+                    label = { Text(stringResource(Res.string.title_field)) },
                     supportingText = {
                         if (gameName.value.text.isBlank()) {
                             Text(
-                                text = "Please enter a title",
+                                text = stringResource(Res.string.title_field_error),
                                 color = Color.Red
                             )
                             buttonActive.value = false
@@ -101,21 +114,21 @@ data class AddScreen(val game: Game = Game()) : Screen {
                     modifier = Modifier.fillMaxWidth(),
                     value = platform.value,
                     onValueChange = { platform.value = it },
-                    label = { Text("Enter platform") }
+                    label = { Text(stringResource(Res.string.platform_field)) },
                 )
                 //@TODO: Probably another dropdown list
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = genre.value,
                     onValueChange = { genre.value = it },
-                    label = { Text("Enter genre") }
+                    label = { Text(stringResource(Res.string.genre_field)) },
 
                 )
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = timeToBeat.value,
                     onValueChange = { timeToBeat.value = it },
-                    label = { Text("Time to beat")}
+                    label = { Text(stringResource(Res.string.title_field))}
                 )
                 ExposedDropdownMenuBox(
                     expanded = ratingDropdown.value,
@@ -145,7 +158,7 @@ data class AddScreen(val game: Game = Game()) : Screen {
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(15.dp, Alignment.Start),
                                     ){
-                                        Text("$stringRating: $intRating")
+                                        Text("${stringResource(stringRating)}: $intRating")
                                     }
                                 },
                                 onClick = {
@@ -172,7 +185,7 @@ data class AddScreen(val game: Game = Game()) : Screen {
                         onCheckedChange = { currentlyPlaying.value =  it},
                     )
                     Text(
-                        text = "Playing now",
+                        text = stringResource(Res.string.play_checkbox),
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 }
@@ -187,7 +200,7 @@ data class AddScreen(val game: Game = Game()) : Screen {
                         onCheckedChange = { finished.value = it},
                     )
                     Text(
-                        text = "Finished",
+                        text = stringResource(Res.string.finished_checkbox),
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 }
@@ -202,7 +215,7 @@ data class AddScreen(val game: Game = Game()) : Screen {
                         onCheckedChange = { favourite.value = it },
                     )
                     Text(
-                        text = "Favourite",
+                        text = stringResource(Res.string.favourite_checkbox),
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 }
@@ -236,7 +249,7 @@ data class AddScreen(val game: Game = Game()) : Screen {
                         //Pop this screen off the stack and navigate back to the last screen
                     },
                 ) {
-                    Text(if(game.id == 0)"Add Game" else "Save Game")
+                    Text(if(game.id == 0)stringResource(Res.string.add_game_button) else "Save Game")
                 }
             }
         }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Backlog-Bezwinger</string>
+    <string name="select_games">Spiele Auswählen</string>
+    <string name="sort_by">Sortieren nach</string>
+    <string name="title_sort">Titel</string>
+    <string name="rating_sort">Bewertung</string>
+    <string name="date_added_sort">Hinzugefügt am</string>
+    <string name="date_completed_sort">Abgeschlossen am</string>
+    <string name="time_to_finish_sort">Spielzeit</string>
+    <string name="dropdown_order">Reihenfolge</string>
+    <string name="dropdown_completed_hide">Abgeschlossene Ausblenden</string>
+    <string name="dropdown_completed_show">Abgeschlossene Anzeigen</string>
+    <string name="Add_screen_header">Noch einer für den Stapel, wie?</string>
+    <string name="title_field">Titel eingeben</string>
+    <string name="title_field_error">Bitte einen Titel eingeben</string>
+    <string name="platform_field">Plattform eingeben</string>
+    <string name="genre_field">Genre eingeben</string>
+    <string name="time_field">Spielzeit bis zum Ende</string>
+    <string name="choose_rating">Bewertung wählen</string>
+    <string name="ratings_1">Schrecklich</string>
+    <string name="ratings_2">Schlecht</string>
+    <string name="ratings_3">Unterdurchschnittlich</string>
+    <string name="ratings_4">Überdurchschnittlich</string>
+    <string name="ratings_5">Gut</string>
+    <string name="ratings_6">Großartig</string>
+    <string name="play_checkbox">Wird gespielt</string>
+    <string name="finished_checkbox">Abgeschlossen</string>
+    <string name="favourite_checkbox">Favorit</string>
+    <string name="add_game_button">Spiel Hinzufügen</string>
+    <string name="completed">Abgeschlossen</string>
+    <string name="filters">Filter</string>
+    <string name="genre">Genre</string>
+    <string name="rating">Bewertung</string>
+    <string name="ttb">Spielzeit</string>
+    <string name="date_added">Hinzugefügt am</string>
+    <string name="date_finished">Abgeschlossen am</string>
+    <string name="platform">Plattform</string>
+    <string name="edit_game">Spiel Bearbeiten</string>
+    <string name="back">Zurück</string>
+    <string name="delete_game">Spiel Löschen</string>
+</resources>

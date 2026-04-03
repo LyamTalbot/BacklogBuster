@@ -10,7 +10,10 @@
             android:theme="@android:style/Theme.Material.Light.NoActionBar">
         <activity
                 android:exported="true"
-                android:name="com.lyamtalbot.backlogbuster2.backlogbuster2.MainActivity">
+                android:name="com.lyamtalbot.backlogbuster2.backlogbuster2.MainActivity"
+                android:resizeableActivity="true"
+                android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
+        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

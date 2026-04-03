@@ -32,6 +32,14 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import backlogbuster2.composeapp.generated.resources.Res
+import backlogbuster2.composeapp.generated.resources.app_name
+import backlogbuster2.composeapp.generated.resources.dropdown_completed_hide
+import backlogbuster2.composeapp.generated.resources.dropdown_completed_show
+import backlogbuster2.composeapp.generated.resources.dropdown_order
+import backlogbuster2.composeapp.generated.resources.filters
+import backlogbuster2.composeapp.generated.resources.select_games
+import backlogbuster2.composeapp.generated.resources.sort_by
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -40,6 +48,7 @@ import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.Filters
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.SortType
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.getScreenModel
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.screenmodels.HomescreenModel
+import org.jetbrains.compose.resources.stringResource
 
 
 class HomeScreen : Screen {
@@ -66,6 +75,7 @@ class HomeScreen : Screen {
                 verticalArrangement = Arrangement.spacedBy(space = 12.dp),
                 modifier = Modifier
                     .safeContentPadding()
+                    .padding(start = 12.dp,end=12.dp, top = 8.dp, bottom = 8.dp)
             ) {
                 //Top Bar
                 Row(
@@ -75,7 +85,7 @@ class HomeScreen : Screen {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "Backlog Buster",
+                        text = stringResource(Res.string.app_name),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontSize = 30.sp,
@@ -132,7 +142,7 @@ class HomeScreen : Screen {
                                 ) {
                                     Icon(Icons.Rounded.CheckCircle, contentDescription = "menu")
                                     Text(
-                                        text = "Select Games",
+                                        text = stringResource(Res.string.select_games),
                                         color = MaterialTheme.colorScheme.onPrimaryContainer
                                     )
                                 }
@@ -162,11 +172,11 @@ class HomeScreen : Screen {
                                         )
                                         Column {
                                             Text(
-                                                text = "Sort by",
+                                                text = stringResource(Res.string.sort_by),
                                                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                                             )
                                             Text(
-                                                text = uiState.value.sortBy.sortString,
+                                                text = stringResource(uiState.value.sortBy.sortString),
                                                 color = MaterialTheme.colorScheme.onSecondaryContainer,
                                             )
                                         }
@@ -187,7 +197,7 @@ class HomeScreen : Screen {
                                                         verticalAlignment = Alignment.CenterVertically,
                                                     ){
                                                         Text(
-                                                            text = entry.sortString,
+                                                            text = stringResource(entry.sortString),
                                                             color = MaterialTheme.colorScheme.onPrimaryContainer
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
@@ -229,7 +239,7 @@ class HomeScreen : Screen {
                                             contentDescription = "filter",
                                         )
                                         Text(
-                                            text = "Filters",
+                                            text = stringResource(Res.string.filters),
                                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                                         )
                                         Spacer(modifier = Modifier.weight(1f))
@@ -248,7 +258,7 @@ class HomeScreen : Screen {
                                                     text =
                                                         {
                                                             Row{
-                                                                Text(entry.name)
+                                                                Text(stringResource(entry.filterString))
                                                                 Spacer(modifier = Modifier.weight(1f))
                                                                 Icon(
                                                                     imageVector = Icons.Filled.Check,
@@ -280,7 +290,7 @@ class HomeScreen : Screen {
                                         contentDescription = null,
                                     )
                                     Text(
-                                        text = "Order",
+                                        text = stringResource(Res.string.dropdown_order),
                                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                                     )
                                     Spacer(modifier = Modifier.weight(1f))
@@ -304,7 +314,7 @@ class HomeScreen : Screen {
                                         contentDescription = null,
                                     )
                                     Text(
-                                        text = if (uiState.value.showCompleted) "Hide Completed" else "Show Completed",
+                                        text = if (uiState.value.showCompleted) stringResource(Res.string.dropdown_completed_hide) else stringResource(Res.string.dropdown_completed_show),
                                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                                     )
                                     Spacer(modifier = Modifier.size(24.dp))

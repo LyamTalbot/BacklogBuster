@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Briseur de Backlog</string>
+    <string name="select_games">Sélectionner des Jeux</string>
+    <string name="sort_by">Trier par</string>
+    <string name="title_sort">Titre</string>
+    <string name="rating_sort">Note</string>
+    <string name="date_added_sort">Date d\'Ajout</string>
+    <string name="date_completed_sort">Date de Complétion</string>
+    <string name="time_to_finish_sort">Temps pour Finir</string>
+    <string name="dropdown_order">Ordre</string>
+    <string name="dropdown_completed_hide">Masquer Terminés</string>
+    <string name="dropdown_completed_show">Afficher Terminés</string>
+    <string name="Add_screen_header">Encore un qui s\'ajoute à la pile, hein?</string>
+    <string name="title_field">Entrer un titre</string>
+    <string name="title_field_error">Veuillez entrer un titre</string>
+    <string name="platform_field">Entrer une plateforme</string>
+    <string name="genre_field">Entrer un genre</string>
+    <string name="time_field">Temps pour terminer</string>
+    <string name="choose_rating">Choisir une note</string>
+    <string name="ratings_1">Horrible</string>
+    <string name="ratings_2">Mauvais</string>
+    <string name="ratings_3">En Dessous de la Moyenne</string>
+    <string name="ratings_4">Au-Dessus de la Moyenne</string>
+    <string name="ratings_5">Bon</string>
+    <string name="ratings_6">Excellent</string>
+    <string name="play_checkbox">En cours</string>
+    <string name="finished_checkbox">Terminé</string>
+    <string name="favourite_checkbox">Favori</string>
+    <string name="add_game_button">Ajouter un Jeu</string>
+    <string name="completed">Terminé</string>
+    <string name="filters">Filtres</string>
+    <string name="genre">Genre</string>
+    <string name="rating">Note</string>
+    <string name="ttb">Temps pour finir</string>
+    <string name="date_added">Date d'ajout</string>
+    <string name="date_finished">Date de complétion</string>
+    <string name="platform">Plateforme</string>
+    <string name="edit_game">Modifier le Jeu</string>
+    <string name="back">Retour</string>
+    <string name="delete_game">Supprimer le Jeu</string>
+    <string name="blank_rating">--</string>
+
+</resources>

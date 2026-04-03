@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Backlog Batidor</string>
+    <string name="select_games">Seleccionar Juegos</string>
+    <string name="sort_by">Ordenar por</string>
+    <string name="title_sort">Título</string>
+    <string name="rating_sort">Puntuación</string>
+    <string name="date_added_sort">Fecha de Adición</string>
+    <string name="date_completed_sort">Fecha de Completado</string>
+    <string name="time_to_finish_sort">Tiempo para Terminar</string>
+    <string name="dropdown_order">Orden</string>
+    <string name="dropdown_completed_hide">Ocultar Completados</string>
+    <string name="dropdown_completed_show">Mostrar Completados</string>
+    <string name="Add_screen_header">Otro más para el montón, ¿eh?</string>
+    <string name="title_field">Introducir título</string>
+    <string name="title_field_error">Por favor introduce un título</string>
+    <string name="platform_field">Introducir plataforma</string>
+    <string name="genre_field">Introducir género</string>
+    <string name="time_field">Tiempo para terminar</string>
+    <string name="choose_rating">Elige una puntuación</string>
+    <string name="ratings_1">Horrible</string>
+    <string name="ratings_2">Malo</string>
+    <string name="ratings_3">Por Debajo de la Media</string>
+    <string name="ratings_4">Por Encima de la Media</string>
+    <string name="ratings_5">Bueno</string>
+    <string name="ratings_6">Excelente</string>
+    <string name="play_checkbox">Jugando ahora</string>
+    <string name="finished_checkbox">Terminado</string>
+    <string name="favourite_checkbox">Favorito</string>
+    <string name="add_game_button">Añadir Juego</string>
+    <string name="completed">Completado</string>
+    <string name="filters">Filtros</string>
+    <string name="genre">Género</string>
+    <string name="rating">Puntuación</string>
+    <string name="ttb">Tiempo para terminar</string>
+    <string name="date_added">Fecha de adición</string>
+    <string name="date_finished">Fecha de finalización</string>
+    <string name="platform">Plataformas</string>
+    <string name="edit_game">Editar Juego</string>
+    <string name="back">Volver</string>
+    <string name="delete_game">Eliminar Juego</string>
+    <string name="blank_rating">--</string>
+</resources>

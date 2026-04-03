@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">积压粉碎机</string>
+    <string name="select_games">选择游戏</string>
+    <string name="sort_by">排序方式</string>
+    <string name="title_sort">标题</string>
+    <string name="rating_sort">评分</string>
+    <string name="date_added_sort">添加日期</string>
+    <string name="date_completed_sort">完成日期</string>
+    <string name="time_to_finish_sort">通关时间</string>
+    <string name="dropdown_order">顺序</string>
+    <string name="dropdown_completed_hide">隐藏已完成</string>
+    <string name="dropdown_completed_show">显示已完成</string>
+    <string name="Add_screen_header">又一款加入吃灰队伍了？</string>
+    <string name="title_field">输入标题</string>
+    <string name="title_field_error">请输入标题</string>
+    <string name="platform_field">输入平台</string>
+    <string name="genre_field">输入类型</string>
+    <string name="time_field">通关时间</string>
+    <string name="choose_rating">选择评分</string>
+    <string name="ratings_1">极差</string>
+    <string name="ratings_2">差</string>
+    <string name="ratings_3">低于平均</string>
+    <string name="ratings_4">高于平均</string>
+    <string name="ratings_5">好</string>
+    <string name="ratings_6">很棒</string>
+    <string name="play_checkbox">正在游玩</string>
+    <string name="finished_checkbox">已完成</string>
+    <string name="favourite_checkbox">收藏</string>
+    <string name="add_game_button">添加游戏</string>
+    <string name="completed">已完成</string>
+    <string name="filters">筛选</string>
+    <string name="genre">类型</string>
+    <string name="rating">评分</string>
+    <string name="ttb">通关时间</string>
+    <string name="date_added">添加日期</string>
+    <string name="date_finished">完成日期</string>
+    <string name="platform">系统平台</string>
+    <string name="edit_game">编辑游戏</string>
+    <string name="back">返回</string>
+    <string name="delete_game">删除游戏</string>
+    <string name="blank_rating">--</string>
+
+</resources>

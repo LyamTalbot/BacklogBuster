@@ -11,7 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import backlogbuster2.composeapp.generated.resources.Res
+import backlogbuster2.composeapp.generated.resources.back
 import cafe.adriel.voyager.navigator.Navigator
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun NavbarBackButton(navigator: Navigator) {
@@ -21,7 +24,7 @@ fun NavbarBackButton(navigator: Navigator) {
             modifier = Modifier.clickable { navigator.pop() }
         ) {
             Icon(imageVector = Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = null)
-            Text(text = "Back", color = MaterialTheme.colorScheme.onPrimaryContainer)
+            Text(text = stringResource(Res.string.back), color = MaterialTheme.colorScheme.onPrimaryContainer)
         }
         Spacer(modifier = Modifier.weight(1f))
     }

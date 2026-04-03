@@ -23,6 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import backlogbuster2.composeapp.generated.resources.Res
+import backlogbuster2.composeapp.generated.resources.delete_game
+import backlogbuster2.composeapp.generated.resources.edit_game
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -30,6 +33,7 @@ import com.lyamtalbot.backlogbuster2.backlogbuster2.database.Game
 import com.lyamtalbot.backlogbuster2.backlogbuster2.database.ratingsMap
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.components.GameDetails
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.components.NavbarBackButton
+import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.components.paddingOverride
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.getScreenModel
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.screenmodels.AddScreenModel
 import com.lyamtalbot.backlogbuster2.backlogbuster2.ui.screenmodels.DetailsScreenModel
@@ -40,6 +44,7 @@ import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 
 
 data class DetailsScreen(val gameID: Int) : Screen {
@@ -57,6 +62,7 @@ data class DetailsScreen(val gameID: Int) : Screen {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(space = 10.dp),
                 modifier = Modifier
+                    .padding(scaffoldPadding)
                     .safeContentPadding()
                     .fillMaxWidth(),
             ) {
@@ -69,13 +75,13 @@ data class DetailsScreen(val gameID: Int) : Screen {
                         navigator.push(AddScreen(game.value))
                     }
                 ){
-                    Text("Edit Game")
+                    Text(stringResource(Res.string.edit_game))
                 }
                 Button(onClick = {
                     detailsScreenModel.deleteGame(game.value.id)
                     navigator.pop()
                 }){
-                    Text("Delete game")
+                    Text(stringResource(Res.string.delete_game))
                 }
             }
         }

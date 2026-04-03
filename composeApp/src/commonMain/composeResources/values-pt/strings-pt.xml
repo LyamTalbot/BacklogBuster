@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Backlog Batedor</string>
+    <string name="select_games">Selecionar Jogos</string>
+    <string name="sort_by">Ordenar por</string>
+    <string name="title_sort">Título</string>
+    <string name="rating_sort">Avaliação</string>
+    <string name="date_added_sort">Data de Adição</string>
+    <string name="date_completed_sort">Data de Conclusão</string>
+    <string name="time_to_finish_sort">Tempo para Terminar</string>
+    <string name="dropdown_order">Ordem</string>
+    <string name="dropdown_completed_hide">Ocultar Concluídos</string>
+    <string name="dropdown_completed_show">Mostrar Concluídos</string>
+    <string name="Add_screen_header">Mais um pro monte, né?</string>
+    <string name="title_field">Inserir título</string>
+    <string name="title_field_error">Por favor insira um título</string>
+    <string name="platform_field">Inserir plataforma</string>
+    <string name="genre_field">Inserir género</string>
+    <string name="time_field">Tempo para terminar</string>
+    <string name="choose_rating">Escolha uma avaliação</string>
+    <string name="ratings_1">Péssimo</string>
+    <string name="ratings_2">Mau</string>
+    <string name="ratings_3">Abaixo da Média</string>
+    <string name="ratings_4">Acima da Média</string>
+    <string name="ratings_5">Bom</string>
+    <string name="ratings_6">Ótimo</string>
+    <string name="play_checkbox">A jogar agora</string>
+    <string name="finished_checkbox">Terminado</string>
+    <string name="favourite_checkbox">Favorito</string>
+    <string name="add_game_button">Adicionar Jogo</string>
+    <string name="completed">Concluído</string>
+    <string name="filters">Filtros</string>
+    <string name="genre">Género</string>
+    <string name="rating">Avaliação</string>
+    <string name="ttb">Tempo para terminar</string>
+    <string name="date_added">Data de adição</string>
+    <string name="date_finished">Data de conclusão</string>
+    <string name="platform">Plataformas</string>
+    <string name="edit_game">Editar Jogo</string>
+    <string name="back">Voltar</string>
+    <string name="delete_game">Eliminar Jogo</string>
+    <string name="blank_rating">--</string>
+
+</resources>
